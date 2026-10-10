@@ -1,0 +1,20 @@
+import copy
+
+import pytest
+from fastapi.testclient import TestClient
+
+from src.app import app, activities
+
+INITIAL_ACTIVITIES = copy.deepcopy(activities)
+
+
+@pytest.fixture(autouse=True)
+def reset_activities():
+    """Restore the in-memory activities so each test starts from the same data"""
+    activities.clear()
+    activities.update(copy.deepcopy(INITIAL_ACTIVITIES))
+
+
+@pytest.fixture
+def client():
+    return TestClient(app)
